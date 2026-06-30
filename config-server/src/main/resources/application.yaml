@@ -1,0 +1,28 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/lenhnguyen403/config-repo-blog
+          default-label: main
+          clone-on-start: true
+          search-paths:
+            - common
+            - api-gateway
+            - auth-service
+            - user-service
+            - post-service
+            - comment-service
+            - category-service
+            - notification-service
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
