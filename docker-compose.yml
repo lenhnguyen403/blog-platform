@@ -1,0 +1,15 @@
+services:
+  eureka:
+    restart: always
+
+  config-server:
+    depends_on:
+      - eureka
+
+
+  auth-service:
+    depends_on:
+      - config-server
+      - mysql
+      - eureka
+
