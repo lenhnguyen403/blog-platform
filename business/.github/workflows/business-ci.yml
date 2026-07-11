@@ -5,28 +5,65 @@ on:
   push:
     branches:
       - main
+      - develop
+
+  pull_request:
+    branches:
+      - main
+      - develop
+
+permissions:
+  contents: read
+
+env:
+  JAVA_VERSION: 21
 
 jobs:
-  ci-pipeline:
-    name: Build CI pipeline
+
+  ##############################
+  ## BUILD + TEST
+  ##############################
+
+  build:
+    name: Build Multi Module
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: .
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
-      - name: Setup Java 21
-        uses: actions/setup-java@v5
+      - name: Setup JDK
+        uses: actions/setup-java@v4
         with:
-          distribution: 'corretto'
-          java-version: '21'
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
           cache: 'maven'
 
-      - name: Run tests (Unit Test & Integration Test)
-        run: mvn test
+      - name: Grant execute permission
+        run: chmod +x mvnw
 
-      - name: Build with Maven
-        run: mvn package -DskipTests
+      - name: Validate
+        run: ./mvnw validate
+
+      - name: Run Compile
+        run: ./mvnw compile
+
+      - name: Run tests (Unit Test & Integration Test)
+        run: ./mvnw test
+
+      - name: Build Package
+        run: ./mvnw package -DskipTests
+
+      - name: Upload JARs
+        uses: actions/upload-artifact@v4
+        with:
+          name: business-artifacts
+          path: |
+            **/target/*.jar
 
 #      - name: Setup Docker Buildx
 #        uses: docker/setup-buildx-action@v4
