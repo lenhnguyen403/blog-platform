@@ -3,14 +3,14 @@ run-name: ${{ github.actor }}
 
 on:
   push:
-    branches:
-      - main
-      - develop
+    branches: [ main, develop ]
+    paths:
+      - 'business/**'
 
   pull_request:
-    branches:
-      - main
-      - develop
+    branches: [ main, develop ]
+    paths:
+      - 'business/**'
 
 permissions:
   contents: read
@@ -30,7 +30,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: .
+        working-directory: business
 
     steps:
       - name: Checkout code
