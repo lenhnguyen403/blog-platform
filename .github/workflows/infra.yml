@@ -23,6 +23,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: infra-${{ github-workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   JAVA_VERSION: 21
 
@@ -30,6 +34,7 @@ jobs:
   detect-changes:
     name: Detect Changed Modules
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     outputs:
       config: ${{ steps.filter.outputs.config }}
@@ -53,6 +58,7 @@ jobs:
   build-config-server:
     name: Build Config Server
     needs: detect-changes
+    timeout-minutes: 15
 
     if: needs.detect-changes.outputs.config == 'true'
 
@@ -86,11 +92,12 @@ jobs:
           path: config-server/target/*.jar
 
   # Build Discovery Server
-  build-dicovery-server:
+  build-discovery-server:
     name: Build Discovery Server
     needs: detect-changes
+    timeout-minutes: 15
 
-    if: needs.detect-changes.outputs.config == 'true'
+    if: needs.detect-changes.outputs.discovery == 'true'
 
     runs-on: ubuntu-latest
 
