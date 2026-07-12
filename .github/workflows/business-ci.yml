@@ -57,7 +57,7 @@ jobs:
         run: ./mvnw test -e
 
       - name: Print Surefire Reports
-        if: fail()
+        if: failure()
         run: |
           find . -path "*/target/surefire-reports/*.txt" \
             -exec echo "========== {} ===========" \; \
