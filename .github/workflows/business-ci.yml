@@ -1,5 +1,6 @@
-name: Continuous Integration Pipeline for Business Logic
-run-name: ${{ github.actor }}
+name: Continuous Integration Pipeline - Business Logic
+run-name: >
+  Business CI - ${{ github.ref_name }} - ${{ github.actor }}
 
 on:
   push:
