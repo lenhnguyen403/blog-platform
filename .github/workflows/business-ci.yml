@@ -54,7 +54,14 @@ jobs:
         run: ./mvnw compile
 
       - name: Run tests (Unit Test & Integration Test)
-        run: ./mvnw test
+        run: ./mvnw test -e
+
+      - name: Print Surefire Reports
+        if: fail()
+        run: |
+          find . -path "*/target/surefire-reports/*.txt" \
+            -exec echo "========== {} ===========" \; \
+            -exec cat {} \;
 
       - name: Build Package
         run: ./mvnw package -DskipTests
