@@ -51,8 +51,10 @@ jobs:
           filters: |
             config: 
               - 'config-server/**'
+              - '.github/workflows/infra.yml'
             discovery: 
               - 'discovery-server/**'
+              - '.github/workflows/infra.yml'
 
   # Build Config Server
   build-config-server:
