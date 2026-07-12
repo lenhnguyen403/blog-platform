@@ -24,7 +24,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: infra-${{ github-workflow }}-${{ github.ref }}
+  group: infra-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 env:
