@@ -1,0 +1,8 @@
+name: Continuous Deploment Pipeline - Business Logic
+run-name: >
+  Business CD - ${{ github.ref_name }} - ${{ github.actor }}
+
+on:
+  workflow_run:
+    workflows:
+      - Continuous Integration Pipeline - Business Logic
