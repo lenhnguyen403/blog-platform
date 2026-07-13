@@ -9,6 +9,8 @@ on:
     types:
       - completed
     branches: [ main, develop ]
+    paths:
+      - 'business/**'
 
 jobs:
   cd-pipeline:
