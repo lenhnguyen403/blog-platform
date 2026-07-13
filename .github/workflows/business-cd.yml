@@ -1,4 +1,4 @@
-name: Continuous Deploment Pipeline - Business Logic
+name: Continuous Deployment Pipeline - Business Logic
 run-name: >
   Business CD - ${{ github.ref_name }} - ${{ github.actor }}
 
@@ -6,3 +6,15 @@ on:
   workflow_run:
     workflows:
       - Continuous Integration Pipeline - Business Logic
+    types:
+      - completed
+    branches: [ main, develop ]
+
+jobs:
+  cd-pipeline:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+#    steps:
+#      - name:
+#        uses:
