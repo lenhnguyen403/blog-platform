@@ -5,15 +5,24 @@ run-name: >
 on:
   push:
   pull_request:
-    branches:
-      - main
+    branches: [ main, develop ]
     paths:
       - 'blog-web/**'
+      - '.github/workflows/web-ci.yml'
+
+concurrency:
+  group: web-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
+    #    name: Build Angular Application
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
+    defaults:
+      run:
+        working-directory: blog-web
 
     steps:
       - name: Checkout Code
@@ -24,14 +33,24 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: blog-web/package-lock.json
 
-      - run: npm ci
-      - run: npm run lint
-      - run: npm test -- --watch=false --browsers=ChromeHeadless
-      - run: npm run Build
+      - name: Install Dependencies
+        run: npm ci
+
+      #      - name: Lint source code
+      #        run: npm run lint
+
+      - name: Run unit test
+        run: npm test -- --watch=false --browsers=ChromeHeadless
+
+      - name: Build Angular application
+        run: npm run build
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: angular-dist
-          path: dist/
+          path: blog-web/dist
+          if-no-files-found: error
+          retention-days: 7
